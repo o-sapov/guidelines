@@ -1,0 +1,12 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">The attributes key, tempo, and meter are often helpful for identifying a musical work when it does not have a distinctive title. <specList>
+      <specDesc key="key"/>
+   </specList>
+   <specList>
+      <specDesc key="mensuration"/>
+   </specList>
+   <specList>
+      <specDesc key="meter"/>
+   </specList>
+   <specList>
+      <specDesc key="tempo"/>
+   </specList> The <gi scheme="MEI">key</gi> element is used exclusively within bibliographic descriptions. Do not confuse this element with <gi scheme="MEI">keySig</gi>, which is used within the body of an MEI file to record this data for musical notation. Likewise, <gi scheme="MEI">meter</gi> should not be confused with the attributes used by staffDef and scoreDef to record meter-related data for notated music. The <gi scheme="MEI">tempo</gi> element can be used here as well as in the body of an MEI document; however, its attributes other than<hi rend="bold">@xml:id</hi>,<hi rend="bold">@label</hi>,<hi rend="bold">@n</hi>,<hi rend="bold">@base</hi>, and<hi rend="bold">@lang</hi>are meaningless in the MEI header context, and therefore should be avoided within a work description. The <gi scheme="MEI">mensuration</gi> element is available for the description of works in the mensural repertoire. When a work uses meter and mensural signs, both <gi scheme="MEI">mensuration</gi> and <gi scheme="MEI">meter</gi> elements may be used.</p>

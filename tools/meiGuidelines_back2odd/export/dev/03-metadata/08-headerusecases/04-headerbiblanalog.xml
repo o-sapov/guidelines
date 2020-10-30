@@ -1,0 +1,3 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">Mapping elements from the MEI metadata header to another descriptive system may help a repository harvest selected data from the MEI file to build a basic catalog record. For this purpose, the following attribute is provided on most elements occurring within <gi scheme="MEI">meiHead</gi>: <specList>
+      <specDesc key="att.bibl" atts="analog"/>
+   </specList> The encoding system to which fields are mapped must be specified in<hi rend="bold">@analog</hi>. When possible, subfields as well as fields should be specified, e.g., subfields within MARC fields.</p>

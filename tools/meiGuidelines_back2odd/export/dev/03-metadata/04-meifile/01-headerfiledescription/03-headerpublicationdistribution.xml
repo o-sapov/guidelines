@@ -1,0 +1,40 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">The <gi scheme="MEI">pubStmt</gi> element is the fourth component of the <gi scheme="MEI">fileDesc</gi> element and is mandatory. <specList>
+      <specDesc key="pubStmt"/>
+   </specList> It may contain either a single <gi scheme="MEI">unpub</gi> element, indicating that the file has yet to be published, or in the case of published material, one or more elements from the <ident type="class">model.pubStmtPart</ident> class. The following elements may be used to provide details regarding the file's publication and distribution: <specList>
+      <specDesc key="address"/>
+   </specList>
+   <specList>
+      <specDesc key="availability"/>
+   </specList>
+   <specList>
+      <specDesc key="date"/>
+   </specList>
+   <specList>
+      <specDesc key="distributor"/>
+   </specList>
+   <specList>
+      <specDesc key="identifier"/>
+   </specList>
+   <specList>
+      <specDesc key="publisher"/>
+   </specList>
+   <specList>
+      <specDesc key="pubPlace"/>
+   </specList>
+   <specList>
+      <specDesc key="respStmt"/>
+   </specList> The publisher is the person or institution by whose authority a given edition of the file is made public. The distributor is the person or institution from whom copies of the text may be obtained. Use <gi scheme="MEI">respStmt</gi> to identify other responsible persons or corporate bodies. The sub-elements of <gi scheme="MEI">availability</gi> should be used to provide detailed information regarding access to the MEI file. <specList>
+      <specDesc key="accessRestrict"/>
+   </specList>
+   <specList>
+      <specDesc key="distributor"/>
+   </specList>
+   <specList>
+      <specDesc key="price"/>
+   </specList>
+   <specList>
+      <specDesc key="sysReq"/>
+   </specList>
+   <specList>
+      <specDesc key="useRestrict"/>
+   </specList>  Give any other useful information (e.g., dates of collection of data) in an annotation within the notes statement, which is described below. Here, as in the description of intellectual responsibility described above, the <gi scheme="MEI">respStmt</gi> element may be used to contain all statements of responsibility regarding publication and distribution when uniformity is desired regardless of the role of participants in the publication process: </p>

@@ -1,0 +1,7 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">
+   <specList>
+      <specDesc key="contents"/>
+   </specList>
+   <specList>
+      <specDesc key="contentItem"/>
+   </specList> Often, it is helpful to identify an entity by listing its constituent parts. A simple description of the work's content, such as may be found in a bibliographic record, can be given in single paragraph element:  Alternatively, a structured list of contents may be constructed using the <gi scheme="MEI">contentItem</gi> element:  Each <gi scheme="MEI">contentItem</gi> element may be preceded by an optional <gi scheme="MEI">label</gi>:  To reference a contents list in an external location, use the<hi rend="bold">@target</hi>attribute:  To facilitate the creation of music catalogs based on MEI header information, <gi scheme="MEI">contents</gi> may contain a heading: </p>

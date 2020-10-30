@@ -1,0 +1,3 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">On the most basic level, chords in the musical text can be encoded using the <gi scheme="MEI">chord</gi> element: <specList>
+      <specDesc key="chord"/>
+   </specList> Additional information on the use of the <gi scheme="MEI">chord</gi> element is available in <ptr target="sharedBasicEvents"/> and <ptr target="cmnNotesChords"/>. With only this kind of markup, harmonic information is implicit in the notes themselves. The elements and attributes of this module, however, provide for the encoding of explicit indications of harmony, such as chord symbols, tablature grids, figured bass signs, and the symbols of harmonic analysis like Roman numerals and their interpretation.</p>

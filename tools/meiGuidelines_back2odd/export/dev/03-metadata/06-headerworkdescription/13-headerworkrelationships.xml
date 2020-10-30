@@ -1,0 +1,9 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">When the FRBR (Functional Requirements for Bibliographic Records) module is available, the following elements may be used within <gi scheme="MEI">work</gi> to describe relationships between the work being described and other works or between the work and expressions of it: <specList>
+      <specDesc key="expressionList"/>
+   </specList>
+   <specList>
+      <specDesc key="componentList"/>
+   </specList>
+   <specList>
+      <specDesc key="relationList"/>
+   </specList> For more information about FRBR and the use of these elements, see chapter <ptr target="FRBR"/>.</p>

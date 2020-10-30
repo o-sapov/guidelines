@@ -1,0 +1,1 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">The<hi rend="bold">@mfunc</hi>attribute describes melodic function of a <gi scheme="MEI">note</gi> or neume using the Humdrum **embel syntax. In the following example, the note B is labeled as a lower neighbor while all other notes are labeled as chord tones: </p>

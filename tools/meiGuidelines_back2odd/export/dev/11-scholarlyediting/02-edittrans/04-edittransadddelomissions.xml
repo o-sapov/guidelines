@@ -1,0 +1,16 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">The following elements are used to indicate when single notational symbols have been omitted from, added to, or marked for deletion from, a musical text. Like the other editorial elements described in this chapter, they allow for a wide range of editorial practices: <specList>
+      <specDesc key="gap"/>
+   </specList>
+   <specList>
+      <specDesc key="unclear"/>
+   </specList>
+   <specList>
+      <specDesc key="att.reasonIdent" atts="reason"/>
+   </specList>
+   <specList>
+      <specDesc key="add"/>
+   </specList>
+   <specList>
+      <specDesc key="del"/>
+   </specList>
+</p>

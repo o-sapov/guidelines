@@ -1,0 +1,3 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">Additional information that aids the identification of the work may be encoded using <gi scheme="MEI">otherChar</gi>. <specList>
+      <specDesc key="otherChar"/>
+   </specList> The following components provide detailed information about the work's context, including the circumstances of its creation, the languages used within it, high-level musical attributes, performing forces, etc.</p>

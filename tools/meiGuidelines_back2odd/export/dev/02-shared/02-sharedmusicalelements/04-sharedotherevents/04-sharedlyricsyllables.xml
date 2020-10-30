@@ -1,0 +1,4 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">The <gi scheme="MEI">syl</gi> element is used to mark a word or portion of a word that is to be vocally performed. A fuller description of its use is provided in chapter <ptr target="lyricsSyl"/>. <specList>
+      <specDesc key="syl"/>
+   </specList>
+</p>

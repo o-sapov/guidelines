@@ -1,0 +1,25 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">With the FRBR module, MEI offers four elements corresponding to the FRBR "Group 1" entities: <specList>
+      <specDesc key="work"/>
+   </specList>
+   <specList>
+      <specDesc key="expression"/>
+   </specList>
+   <specList>
+      <specDesc key="manifestation"/>
+   </specList>
+   <specList>
+      <specDesc key="item"/>
+   </specList> The names of the MEI entities follow those of FRBR: the <gi scheme="MEI">work</gi> element is a container for description at the FRBR "work" level, <gi scheme="MEI">expression</gi> is for description at the FRBR "expression" level, <gi scheme="MEI">manifestation</gi> contains "manifestation" level description, and <gi scheme="MEI">item</gi> holds FRBR "item" level description. Please note: Until MEI 3.0.0, the <gi scheme="MEI">source</gi> element in <gi scheme="MEI">sourceDesc</gi> was used for manifestation-level descriptions. The <gi scheme="MEI">work</gi> element has an optional child element to hold the expression elements: <specList>
+      <specDesc key="expressionList"/>
+   </specList> As <gi scheme="MEI">expressionList</gi> is a container element for descriptions of different expressions of the same work, it may contain only <gi scheme="MEI">expression</gi> elements. The content model of <gi scheme="MEI">expression</gi> is similar to that of <gi scheme="MEI">work</gi>. It does not, however, permit <gi scheme="MEI">expressionList</gi> and <gi scheme="MEI">audience</gi> elements. But it adds elements that aid identification and description of specific versions of a work: <specList>
+      <specDesc key="extent"/>
+   </specList>
+   <specList>
+      <specDesc key="scoreFormat"/>
+   </specList> Since expressions, like works, are abstractions, their titles are often nebulous. Usually, however, the title of an expression is the same as the work it represents. When the relationship between a work and an expression is encoded hierarchically, the expression’s title element may be omitted with the assumption that it will be inherited from the work. If no title is provided for an expression, distinguishing characteristics must be provided in other elements, such as <gi scheme="MEI">perfMedium</gi>, as in the following example:  Programmatic concatenation of the work title and one or more characteristics of the expression can be used to provide identification for the expression. For example, the expressions above may be identified by "Pavane pour une infante défunte (piano)" and "Pavane pour une infante défunte (orchestra)". In some cases, it may be helpful to assign a descriptive title to the expression, as illustrated below. The carrier of the manifestation is often a good source of this kind of descriptive text.   The itemList element provides functionality similar to that of expressionList; that is, it can be used to group descriptions of individual items (exemplars) of the parent source. Just like <gi scheme="MEI">expressionList</gi>, which can only hold <gi scheme="MEI">expression</gi> sub-components, <gi scheme="MEI">itemList</gi> may only contain <gi scheme="MEI">item</gi> elements. <specList>
+      <specDesc key="itemList"/>
+   </specList>
+   <specList>
+      <specDesc key="item"/>
+   </specList>
+</p>

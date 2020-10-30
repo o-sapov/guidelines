@@ -1,0 +1,4 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">
+   <specList>
+      <specDesc key="biblList"/>
+   </specList> The <gi scheme="MEI">biblList</gi> element allows citation of bibliographic evidence supporting assertions made within other sub-components of the work description.</p>

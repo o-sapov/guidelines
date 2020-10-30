@@ -1,0 +1,9 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">The graphics primitives and symbols can be used directly in the music to describe text and lines on a purely graphical level, without implying a specific logical meaning. If possible, however, more meaningful elements should be used. This means for example, "a tempo" or "da capo" should in general not be put inside <gi scheme="MEI">anchoredText</gi>. Instead, <gi scheme="MEI">tempo</gi> and <gi scheme="MEI">dir</gi> should be used. Likewise, slurs and ties should be encoded using their respective elements, not using <gi scheme="MEI">curve</gi>, and for glissandi, <gi scheme="MEI">gliss</gi> should be used instead of <gi scheme="MEI">line</gi>. An example usage for <gi scheme="MEI">line</gi> is the visualization of voice leading, which is not covered by a specific MEI element. <figure>
+      <head>Voice leading visualization as found in an Edition Peters print of Album für die Jugend by Schumann, No. 35 (Mignon), measure 6. (Unknown date, plate number is 10478.)</head>
+      <graphic url="modules/usersymbols/mignon.png"/>
+   </figure>
+   <figure>
+      <head>Encoding of the Schumann example</head>
+      <!--TODO: This figure lacks content; please check!-->
+   </figure>
+</p>

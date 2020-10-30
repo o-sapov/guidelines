@@ -1,0 +1,7 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">Measure separators, i.e., bar lines, and custos signs are also considered to be events. <specList>
+      <specDesc key="barLine"/>
+   </specList>
+   <specList>
+      <specDesc key="custos"/>
+   </specList>
+</p>

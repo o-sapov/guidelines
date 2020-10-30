@@ -1,0 +1,5 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">A common feature for keyboard music is fingering, indicating the finger, which should be used to play a single note. Basic fingering can be encoded in MEI using the <gi scheme="MEI">fing</gi> element, which is a member of the <ident type="class">model.fingeringLike</ident> class, and thus part of the <ident type="class">model.controlEventLike</ident> class. The following example, taken from [Charles-Louis Hanon's](https://en.wikipedia.org/wiki/Charles-Louis_Hanon) *Le Pianiste virtuose*, shows typical fingering: <figure>
+      <head>Fingering in Hanon's exercise no. 21</head>
+      <graphic url="ExampleImages/Hanon.21.png"/>
+   </figure>
+</p>

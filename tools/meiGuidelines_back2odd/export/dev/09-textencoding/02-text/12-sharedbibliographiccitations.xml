@@ -1,0 +1,86 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">The following element is used in the encoding of bibliographic citations and references: <specList>
+      <specDesc key="bibl"/>
+   </specList> The <gi scheme="MEI">bibl</gi> element may contain a mix of text and more specific elements, including the following: <specList>
+      <specDesc key="annot"/>
+   </specList>
+   <specList>
+      <specDesc key="arranger"/>
+   </specList>
+   <specList>
+      <specDesc key="author"/>
+   </specList>
+   <specList>
+      <specDesc key="biblScope"/>
+   </specList>
+   <specList>
+      <specDesc key="composer"/>
+   </specList>
+   <specList>
+      <specDesc key="creation"/>
+   </specList>
+   <specList>
+      <specDesc key="date"/>
+   </specList>
+   <specList>
+      <specDesc key="distributor"/>
+   </specList>
+   <specList>
+      <specDesc key="edition"/>
+   </specList>
+   <specList>
+      <specDesc key="editor"/>
+   </specList>
+   <specList>
+      <specDesc key="extent"/>
+   </specList>
+   <specList>
+      <specDesc key="funder"/>
+   </specList>
+   <specList>
+      <specDesc key="genre"/>
+   </specList>
+   <specList>
+      <specDesc key="identifier"/>
+   </specList>
+   <specList>
+      <specDesc key="imprint"/>
+   </specList>
+   <specList>
+      <specDesc key="librettist"/>
+   </specList>
+   <specList>
+      <specDesc key="lyricist"/>
+   </specList>
+   <specList>
+      <specDesc key="physLoc"/>
+   </specList>
+   <specList>
+      <specDesc key="publisher"/>
+   </specList>
+   <specList>
+      <specDesc key="pubPlace"/>
+   </specList>
+   <specList>
+      <specDesc key="recipient"/>
+   </specList>
+   <specList>
+      <specDesc key="relatedItem"/>
+   </specList>
+   <specList>
+      <specDesc key="repository"/>
+   </specList>
+   <specList>
+      <specDesc key="respStmt"/>
+   </specList>
+   <specList>
+      <specDesc key="series"/>
+   </specList>
+   <specList>
+      <specDesc key="sponsor"/>
+   </specList>
+   <specList>
+      <specDesc key="textLang"/>
+   </specList>
+   <specList>
+      <specDesc key="title"/>
+   </specList> These elements fall into the following categories: - identification of the bibliographic entity and those responsible for its intellectual content - publication and distribution data for the bibliographic entity - description of the physical characteristics of the item - annotation of the bibliographic citation and additional details regarding the item's intellectual content The elements <gi scheme="MEI">title</gi>, <gi scheme="MEI">edition</gi>, <gi scheme="MEI">series</gi>, and <gi scheme="MEI">identifier</gi> fall into the first category as do the elements <gi scheme="MEI">arranger</gi>, <gi scheme="MEI">author</gi>, <gi scheme="MEI">composer</gi>, <gi scheme="MEI">librettist</gi>, <gi scheme="MEI">lyricist</gi>, <gi scheme="MEI">funder</gi>, <gi scheme="MEI">sponsor</gi>, and <gi scheme="MEI">respStmt</gi>. The respStmt element is provided for marking responsibility roles that cannot be recorded using more specific elements. The <gi scheme="MEI">biblScope</gi> element also carries information of an identifying nature. The <gi scheme="MEI">identifier</gi> for a given item may be an International Standard Book/Music Number, Library of Congress Control Number, a publisher's or plate number, a personal identification number, an entry in a bibliography or catalog, etc. To classify the <gi scheme="MEI">title</gi> according to some convenient typology, the<hi rend="bold">@type</hi>attribute may be used. Sample values include: main (main title), subordinate (subtitle, title of part), abbreviated (abbreviated form of title), alternative (alternate title by which the work is also known), translated (translated form of title), uniform (collective title). The<hi rend="bold">@type</hi>attribute is provided for convenience in analysing titles and processing them according to their type; where such specialized processing is not necessary, there is no need for such analysis, and the entire title, including subtitles and any parallel titles, may be enclosed within a single <gi scheme="MEI">title</gi> element. Title parts may be encoded in <gi scheme="MEI">title</gi> sub-elements. The name of the list from which a controlled value is taken may be recorded using the<hi rend="bold">@authority</hi>attribute. Publication and distribution data may be captured using <gi scheme="MEI">pubPlace</gi>, <gi scheme="MEI">publisher</gi>, <gi scheme="MEI">distributor</gi>, and <gi scheme="MEI">date</gi> elements directly inside <gi scheme="MEI">bibl</gi> when the citation is unstructured. However, these elements should be grouped within <gi scheme="MEI">imprint</gi> whenever practical. The physical characteristics of the cited item may be described using the <gi scheme="MEI">extent</gi> element. Annotation of the bibliographic citation and the provision of other pertinent details are addressed by several elements. Commentary on the bibliographic item or citation is accommodated by the <gi scheme="MEI">annot</gi> and <gi scheme="MEI">creation</gi> elements. The <gi scheme="MEI">annot</gi> element is provided for generic comments, while <gi scheme="MEI">creation</gi> is intended to hold information about the context of the creation of the cited item. Terms by which the bibliographic item can be classified may be placed in <gi scheme="MEI">genre</gi>. For letters and other correspondence, <gi scheme="MEI">recipient</gi> captures the name of the person or organization to whom the item was addressed. The natural language(s) of the item may be recorded in one or more <gi scheme="MEI">textLang</gi> elements. Finally, a holding institution may be documented using the <gi scheme="MEI">repository</gi> element directly within <gi scheme="MEI">bibl</gi>, but <gi scheme="MEI">physLoc</gi> should be used whenever possible as a grouping mechanism for location and shelfmark information. To identify sub-units of the holding institution, <gi scheme="MEI">repository</gi> sub-elements may be used. The name of the list from which a controlled value for the agency name is taken may be recorded using the<hi rend="bold">@authority</hi>attribute. When supplied with a<hi rend="bold">@target</hi>attribute, <gi scheme="MEI">bibl</gi> may function as a hypertext reference to an external electronic resource. In addition, other related bibliographic items may be described or referenced using the <gi scheme="MEI">relatedItem</gi> element.  Please consult <ptr target="sharedNames"/> and <ptr target="dates"/> for more information about recording the names and dates frequently found in bibliographic citations.</p>

@@ -1,0 +1,17 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">The <gi scheme="MEI">symbolDef</gi> element uses SVG markup or the aforementioned graphic primitives to describe a symbol. A symbol definition may also use symbols defined by other <gi scheme="MEI">symbolDef</gi> elements by employing the <gi scheme="MEI">symbol</gi> element. <figure>
+      <head>Definition of a triangle percussion symbol using graphic primitives</head>
+      <!--TODO: This figure lacks content; please check!-->
+   </figure>
+   <figure>
+      <head>Rendition of the triangle defined above</head>
+      <graphic url="modules/usersymbols/triangle.png"/>
+   </figure>
+   <figure>
+      <head>Symbol composed of the symbol defined above and additional graphics primitives</head>
+      <!--TODO: This figure lacks content; please check!-->
+   </figure>
+   <figure>
+      <head>Rendition of the composite triangle symbol</head>
+      <graphic url="modules/usersymbols/triangleWithStick.png"/>
+   </figure>
+</p>

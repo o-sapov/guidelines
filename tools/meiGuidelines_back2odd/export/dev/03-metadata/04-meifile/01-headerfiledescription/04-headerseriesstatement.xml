@@ -1,0 +1,20 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">The <gi scheme="MEI">seriesStmt</gi> element is the fifth component of the <gi scheme="MEI">fileDesc</gi> element and is optional. <specList>
+      <specDesc key="seriesStmt"/>
+   </specList> A series may be defined in one of the following ways: - A group of separate items related to one another by the fact that each item bears, in addition to its own title proper, a collective title applying to the group as a whole. The individual items may or may not be numbered. - Each of two or more volumes of essays, lectures, articles, or other items, similar in character and issued in sequence. - A separately numbered sequence of volumes within a series or serial. The <gi scheme="MEI">seriesStmt</gi> element may contain one or more of the following more specific elements: <specList>
+      <specDesc key="contents"/>
+   </specList>
+   <specList>
+      <specDesc key="editor"/>
+   </specList>
+   <specList>
+      <specDesc key="identifier"/>
+   </specList>
+   <specList>
+      <specDesc key="respStmt"/>
+   </specList>
+   <specList>
+      <specDesc key="seriesStmt"/>
+   </specList>
+   <specList>
+      <specDesc key="title"/>
+   </specList> The <gi scheme="MEI">title</gi>, <gi scheme="MEI">editor</gi> and <gi scheme="MEI">identifier</gi> elements have the same function described above: identification of the item, in this case the series, and the individuals or groups responsible for its creation. The <gi scheme="MEI">title</gi> element is required within <gi scheme="MEI">seriesStmt</gi>.  The <gi scheme="MEI">identifier</gi> element may be used to supply any identifying number associated with the series, including both standard numbers such as an ISSN and particular issue numbers. Its<hi rend="bold">@type</hi>attribute is used to categorize the number further, taking the value 'ISSN' for an ISSN, for example.  The contents of the series may be enumerated using the <gi scheme="MEI">contents</gi> element. Use of this element should be determined by the complexity of the resource and whether or not the information is readily available. The <gi scheme="MEI">contents</gi> element may consist of a single paragraph when unstructured information is sufficient.  Alternatively, <gi scheme="MEI">contentItem</gi> elements may be used to provide structure for the content description.  Finally, using the<hi rend="bold">@target</hi>attribute, a link to an external table of contents may be supplied in lieu of or in addition to the child elements of <gi scheme="MEI">contents</gi>.  The <gi scheme="MEI">seriesStmt</gi> element is allowed to nest within itself in order to accommodate a series within a series.</p>

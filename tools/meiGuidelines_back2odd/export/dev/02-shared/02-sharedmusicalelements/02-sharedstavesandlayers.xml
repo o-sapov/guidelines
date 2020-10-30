@@ -1,0 +1,6 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">The elements below are used to capture the logical organization of musical notation: <specList>
+      <specDesc key="staff"/>
+   </specList>
+   <specList>
+      <specDesc key="layer"/>
+   </specList> The actual use of the <gi scheme="MEI">staff</gi> and <gi scheme="MEI">layer</gi> elements depends on the repertoire and historical context of the source material. For details on their use in Common Western Notation, please refer to chapter <ptr target="cmnMeasures"/>. For mensural notation, see chapter <ptr target="mensuralData"/>, and for neumatic notation, chapter <ptr target="neumes"/>.</p>

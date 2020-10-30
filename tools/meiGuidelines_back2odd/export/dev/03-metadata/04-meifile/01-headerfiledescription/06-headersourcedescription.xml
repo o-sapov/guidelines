@@ -1,0 +1,21 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">The <gi scheme="MEI">sourceDesc</gi> element is the seventh and final component of the <gi scheme="MEI">fileDesc</gi> element. In MEI, <gi scheme="MEI">sourceDesc</gi> is a grouping element containing one or more <gi scheme="MEI">source</gi> elements, each of which records details of a source from which the computer file is derived. This might be a printed text or manuscript, another computer file, an audio or video recording, or a combination of these. An electronic file may also have no source, if what is being cataloged is an original text created in electronic form. <specList>
+      <specDesc key="sourceDesc"/>
+   </specList>
+   <specList>
+      <specDesc key="source"/>
+   </specList> The <gi scheme="MEI">source</gi> element may contain <specList>
+      <specDesc key="head"/>
+   </specList>
+   <specList>
+      <specDesc key="locusGrp"/>
+   </specList>
+   <specList>
+      <specDesc key="locus"/>
+   </specList>
+   <specList>
+      <specDesc key="bibl"/>
+   </specList>
+   <specList>
+      <specDesc key="biblStruct"/>
+   </specList>
+</p>

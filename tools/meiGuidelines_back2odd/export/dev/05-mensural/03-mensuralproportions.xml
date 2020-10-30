@@ -1,0 +1,4 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">Proportions can also be indicated within the <gi scheme="MEI">staffDef</gi> element. The<hi rend="bold">@proport.num</hi>and<hi rend="bold">@proport.numbase</hi>attributes are available for encoding the numerator and the denominator of the proportion, respectively. There is also a <gi scheme="MEI">proport</gi> element that can be used as an alternative, with the corresponding<hi rend="bold">@num</hi>and<hi rend="bold">@numbase</hi>attributes. <specList>
+      <specDesc key="proport"/>
+   </specList>
+</p>

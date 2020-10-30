@@ -1,0 +1,10 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">The<hi rend="bold">@dur</hi>attribute on <gi scheme="MEI">rest</gi> captures the written duration of the rest and allows the same values as on <gi scheme="MEI">note</gi> and <gi scheme="MEI">chord</gi>. The CMN module also makes three more elements available for special forms of rest: <specList>
+      <specDesc key="mRest"/>
+   </specList>
+   <specList>
+      <specDesc key="multiRest"/>
+   </specList>
+   <specList>
+      <specDesc key="mSpace"/>
+   </specList>
+</p>

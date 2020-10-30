@@ -1,0 +1,20 @@
+<p xmlns="http://www.tei-c.org/ns/1.0">The <gi scheme="MEI">surface</gi> element and it's children are used to relate musical content with digitizations and specific image zones on them (see <ptr target="facsimileElements"/>). <gi scheme="MEI">surface</gi> elements are always encoded in sequence within <gi scheme="MEI">facsimile</gi>, and thus lack the expressiveness of <gi scheme="MEI">foliaDesc</gi>. However, it is possible to relate these two concepts. <gi scheme="MEI">folium</gi> offers two specific attributes: <specList>
+      <specDesc key="att.foliumSurfaces" atts="recto"/>
+   </specList>
+   <specList>
+      <specDesc key="att.foliumSurfaces" atts="verso"/>
+   </specList> These attributes are used to point to the<hi rend="italic">@xml:id</hi>of a <gi scheme="MEI">surface</gi> element. <figure>
+      <head>Positional attributes on folium and bifolium</head>
+      <graphic url="ExampleImages/foliadesc-02.png"/>
+   </figure> On <gi scheme="MEI">bifolium</gi>, the corresponding attributes are: <specList>
+      <specDesc key="att.bifoliumSurfaces" atts="outer.recto"/>
+   </specList>
+   <specList>
+      <specDesc key="att.bifoliumSurfaces" atts="inner.verso"/>
+   </specList>
+   <specList>
+      <specDesc key="att.bifoliumSurfaces" atts="inner.recto"/>
+   </specList>
+   <specList>
+      <specDesc key="att.bifoliumSurfaces" atts="outer.verso"/>
+   </specList> With those attributes, page numbers can be derived from <gi scheme="MEI">foliaDesc</gi>, alongside the information where the content on a given <gi scheme="MEI">surface</gi> is placed on a (bi)folium. Coming back to the example above this might look like so: </p>
