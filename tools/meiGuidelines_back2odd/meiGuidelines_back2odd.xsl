@@ -51,12 +51,23 @@
   </xd:doc>
   <xsl:template match="/">
     <xsl:message select="'files: ' || count($files)"/>
-    
     <xsl:for-each select="$files">
       <xsl:variable name="current.file" select="." as="node()"/>
       <!--<xsl:message select="'aiming at ' || $guidelines.path.docs.export || $current.file/@path"/>-->
-      <xsl:result-document href="{$guidelines.path.docs.export || $current.file/@path}">
-        <xsl:apply-templates select="$current.file/child::node()" mode="html2odd"/>
+      <xsl:variable name="html.prepped" as="node()*">
+        <xsl:apply-templates select="$current.file/child::node()" mode="html2odd.prep"/>
+      </xsl:variable>
+      <xsl:variable name="odd.prepped" as="node()*">
+        <xsl:apply-templates select="$html.prepped" mode="html2odd"/>
+      </xsl:variable>
+      <xsl:variable name="odd.cleaned" as="node()*">
+        <xsl:apply-templates select="$odd.prepped" mode="html2odd.post"/>
+      </xsl:variable>
+      <xsl:result-document href="{$guidelines.path.docs.export || $current.file/@path}" indent="yes" method="xml">
+        <div xmlns="http://www.tei-c.org/ns/1.0" xml:id="{$current.file/@sectionid}" type="{$current.file/@level}">
+          <head><xsl:value-of select="$current.file/@title"/></head>
+          <xsl:sequence select="$odd.cleaned"/>
+        </div>        
       </xsl:result-document>
     </xsl:for-each>
     

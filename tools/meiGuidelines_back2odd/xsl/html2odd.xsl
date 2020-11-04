@@ -21,6 +21,24 @@
     </p>
   </xsl:template>
   
+  <xsl:template match="a[.//text()]" mode="html2odd">
+    <ref xmlns="http://www.tei-c.org/ns/1.0">
+      <xsl:apply-templates select="node() | @*" mode="#current"/>
+    </ref>
+  </xsl:template>
+  
+  <xsl:template match="a[not(.//text())]" mode="html2odd">
+    <ptr xmlns="http://www.tei-c.org/ns/1.0">
+      <xsl:apply-templates select="node() | @*" mode="#current"/>
+    </ptr>
+  </xsl:template>
+  
+  <xsl:template match="a/@href" mode="html2odd">
+    <xsl:attribute name="target" select="."/>    
+  </xsl:template>
+  
+  <xsl:template match="a/@title" mode="html2odd"/>
+  
   <xsl:template match="em" mode="html2odd">
     <hi xmlns="http://www.tei-c.org/ns/1.0" rend="italic">
       <xsl:apply-templates select="node() | @*" mode="#current"/>
@@ -31,6 +49,17 @@
     <hi xmlns="http://www.tei-c.org/ns/1.0" rend="bold">
       <xsl:apply-templates select="node() | @*" mode="#current"/>
     </hi>
+  </xsl:template>
+  
+  <xsl:template match="text()" mode="html2odd.prep" priority="1">    
+    <xsl:analyze-string select="." regex="GLOSSLIST-LABEL-(.+?)-ENDLABEL-ITEM-(.*?)-ENDITEM-ENDGLOSSLIST">
+      <xsl:matching-substring>
+        <list xmlns="http://www.tei-c.org/ns/1.0" type="gloss"><label><xsl:value-of select="regex-group(1)"/></label><item><xsl:value-of select="regex-group(2)"/></item></list>
+      </xsl:matching-substring>
+      <xsl:non-matching-substring>
+        <xsl:sequence select="."/>
+      </xsl:non-matching-substring>
+    </xsl:analyze-string>
   </xsl:template>
   
   <xsl:template match="text()" mode="html2odd" priority="1">
@@ -47,7 +76,7 @@
               <!-- reference to a guidelines chapter -->
               <xsl:when test="$target.type = 'id'">
                 <xsl:variable name="target" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string"/>
-                <ptr xmlns="http://www.tei-c.org/ns/1.0" target="{$target}"/>
+                <ptr xmlns="http://www.tei-c.org/ns/1.0" target="#{$target}"/>
               </xsl:when>
               
               <!-- reference to an element -->
@@ -108,7 +137,6 @@
             <xsl:variable name="target" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string?"/>
             <xsl:variable name="caption" select="normalize-space(substring-before(substring-after(regex-group(1),'caption='||$quot),$quot))" as="xs:string"/>
             
-            <xsl:message select="'_' || $target || '_: ' || $caption"/>
             <figure xmlns="http://www.tei-c.org/ns/1.0">
               <!-- figure caption -->
               <xsl:choose>
@@ -132,15 +160,29 @@
             </figure>
           </xsl:when>
           
+          <!-- an MEI example file -->
           <xsl:when test="starts-with(regex-group(1), 'mei')">
+            <xsl:variable name="target" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string?"/>
+            <xsl:variable name="valid" select="normalize-space(substring-before(substring-after(regex-group(1),'valid='||$quot),$quot))" as="xs:string?"/>
             
-          </xsl:when>
-          <xsl:when test="starts-with(regex-group(1), 'verovio')">
+            <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="code" xml:space="preserve"><xsl:if test="$valid and $valid = ('true', 'false', 'feasible')"><xsl:attribute name="valid" select="$valid"/></xsl:if><include xmlns="use.xinclude" href="{$target}"/></egXML>
             
           </xsl:when>
           
-          <xsl:when test="starts-with(regex-group(1), 'smufl')">
+          <!-- an MEI example file, which is supposed to be rendered as well (it had an option to turn off showing the XML, but that's never been used) -->
+          <xsl:when test="starts-with(regex-group(1), 'verovio')">
+            <xsl:variable name="target" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string?"/>
+            <xsl:variable name="valid" select="normalize-space(substring-before(substring-after(regex-group(1),'valid='||$quot),$quot))" as="xs:string?"/>
             
+            <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="verovio code" xml:space="preserve"><include xmlns="use.xinclude" href="{$target}"/></egXML>
+            
+          </xsl:when>
+          
+          <!-- a symbol using a smufl font -->
+          <xsl:when test="starts-with(regex-group(1), 'smufl')">
+            <xsl:variable name="code" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string?"/>
+            
+            <graphic xmlns="http://www.tei-c.org/ns/1.0" rend="smufl" url="https://edirom.de/smufl-browser/{$code}"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:message select="'ERROR: Unable to parse the following inclusion: ' || regex-group(1)" terminate="yes"/>
@@ -151,6 +193,31 @@
         <xsl:value-of select="."/>
       </xsl:non-matching-substring>
     </xsl:analyze-string>
+    
   </xsl:template>
+  
+  <xsl:template match="tei:list[@type='gloss']" mode="html2odd.post">
+    <xsl:variable name="list" select="." as="node()"/>
+    <xsl:variable name="prec.1" select="preceding-sibling::tei:*[1]" as="node()?"/>
+    <xsl:variable name="foll.1" select="func:getFollowingGlossLists($list)" as="node()*"/>
+    <xsl:choose>
+      <xsl:when test="exists($prec.1) and local-name($prec.1) = 'list' and $prec.1/@type = 'gloss'"/>
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:apply-templates select="@*" mode="#current"/>
+          <xsl:apply-templates select="node() | $foll.1/child::node()"/>
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
+  <xsl:function name="func:getFollowingGlossLists" as="node()*">
+    <xsl:param name="elem" as="node()"/>
+    <xsl:variable name="foll.1" select="$elem/following-sibling::tei:*[1]" as="node()?"/>
+    <xsl:if test="exists($foll.1) and local-name($foll.1) = 'list' and $foll.1/@type = 'gloss'">
+      <xsl:sequence select="$foll.1"/>
+      <xsl:sequence select="func:getFollowingGlossLists($foll.1)"/>
+    </xsl:if>
+  </xsl:function>
   
 </xsl:stylesheet>
