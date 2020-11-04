@@ -26,7 +26,7 @@ Some metaMarks may have actual content, like marginal notes. This content may be
 
 It is important to keep in mind that {% include link elem="metaMark" %} elements do not encode the textual consequences they transport – this is an encoding of the sign, not of its meaning, which can be encoded in other elements like {% include link elem="restore" %}.
 
-{% include figure img="modules/edittrans/metamarks_Beethoven_op59.3.png" caption="metaMarks in Beethoven's op.59.3, p.18" %}
+{% include figure img="modules/edittrans/metamarks-Beethoven-op59.3.png" caption="metaMarks in Beethoven's op.59.3, p.18" %}
 
 The above excerpt from a Beethoven manuscript holds a number of different metaMarks, some of which are encoded in the following examples:
 
