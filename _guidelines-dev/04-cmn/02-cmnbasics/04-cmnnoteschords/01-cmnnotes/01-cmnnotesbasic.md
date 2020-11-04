@@ -29,7 +29,7 @@ The usual CMN-specific values for **@dur** are:
 {:.gloss}
 **16**: sixteenth note
 {:.gloss}
-**…**
+**…**: 
 {:.gloss}
 **2048**: 2048th note
 

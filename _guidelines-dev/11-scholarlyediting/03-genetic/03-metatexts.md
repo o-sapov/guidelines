@@ -12,15 +12,24 @@ Some of these so-called ‘metatexts’ can be encoded using MEI, namely those t
 
 A metaMark is provided as a ‘controlEvent’ (see {% include link id="eventsControlevents" %}); as such, by convention, it should be encoded at the end of the {% include link elem="measure" %} where it first occurs. It is highly recommended to specify the function of the metaMark using its **@function** attribute, which may take the following values:
 
-* *confirmation*: confirmation of a previous textual decision; i.e., cancellation of a deleted passage in a different writing medium.
-* *addition*: denoted material is to be inserted in the musical text.
-* *deletion*: denoted material is no longer part of the musical text.
-* *substitution*: denoted material is replaced, either by the musical text pointed at with the **@target** attribute or the musical content of the metaMark element itself.
-* *clarification*: attempt to clarify a potentially illegible or otherwise unclear part of the musical text.
-* *question*: marks a section of the musical text which is to be considered further.
-* *investigation*: marks a section of the musical text as an investigation of the consequences of certain compositional decisions or potential alternatives.
-* *restoration*: declares a formerly cancelled part of the musical text as valid again.
-* *navigation*: clarification of the reading order of the musical text.
+{:.gloss}
+*confirmation*: confirmation of a previous textual decision; i.e., cancellation of a deleted passage in a different writing medium.
+{:.gloss}
+*addition*: denoted material is to be inserted in the musical text.
+{:.gloss}
+*deletion*: denoted material is no longer part of the musical text.
+{:.gloss}
+*substitution*: denoted material is replaced, either by the musical text pointed at with the @target attribute or the musical content of the metaMark element itself.
+{:.gloss}
+*clarification*: attempt to clarify a potentially illegible or otherwise unclear part of the musical text.
+{:.gloss}
+*question*: marks a section of the musical text which is to be considered further.
+{:.gloss}
+*investigation*: marks a section of the musical text as an investigation of the consequences of certain compositional decisions or potential alternatives.
+{:.gloss}
+*restoration*: declares a formerly cancelled part of the musical text as valid again.
+{:.gloss}
+*navigation*: clarification of the reading order of the musical text.
 
 Some metaMarks may have actual content, like marginal notes. This content may be transcribed inside the {% include link elem="metaMark" %} element. It also has a **@facs** attribute to refer back to the corresponding sections of a facsimile.
 

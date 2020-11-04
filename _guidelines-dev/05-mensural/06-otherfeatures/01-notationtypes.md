@@ -11,12 +11,11 @@ The **@notationtype** attribute, part of the MEI module, can be used within the 
 At the moment, three values are in use for mensural notation:
 
 {:.gloss}
-**mensural:** For mensural notation in general
+**mensural**: For mensural notation in general
 {:.gloss}
-**mensural.black:** For black mensural notation, this is in reference to the use of filled-in note heads
+**mensural.black** :For black mensural notation, this is in reference to the use of filled-in note heads
 {:.gloss}
-**mensural.white:** For white mensural notation, this is in reference to the use of void note heads, which became most widely used in the Renaissance period
-{:.gloss}
+**mensural.white**: For white mensural notation, this is in reference to the use of void note heads, which became most widely used in the Renaissance period
 
 The values of the **@notationtype** attribute can indicate notation types other than mensural, such as common (Western) music notation, neume notation, and tablature.
 

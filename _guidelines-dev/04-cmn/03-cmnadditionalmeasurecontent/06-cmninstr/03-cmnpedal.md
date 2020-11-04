@@ -34,4 +34,4 @@ To specify the pedal, that has to be used, the **@func** attribute allows the fo
 **sostenuto**: The sostenuto or tone-sustaining pedal allows notes already undamped to continue to ring while other notes are damped normally; that is, on their release by the fingers. This is usually the center pedal of the modern piano. (Often marked with: {% include smufl code="E659" %})
 
 {:.gloss}
-**silent** The silent or practice pedal mutes the volume of the piano so that one may practice quietly. It is sometimes a replacement for the sostenuto pedal, especially on an upright or vertical instrument.
+**silent**: The silent or practice pedal mutes the volume of the piano so that one may practice quietly. It is sometimes a replacement for the sostenuto pedal, especially on an upright or vertical instrument.
