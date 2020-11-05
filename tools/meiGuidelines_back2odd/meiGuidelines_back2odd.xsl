@@ -10,7 +10,7 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:func="no:link"
   xmlns:md2doc="http://www.markdown2docbook.com/ns/md2doc"
-  exclude-result-prefixes="xs math xd mei tei rng sch xi func md2doc" 
+  exclude-result-prefixes="xs math xd mei rng sch func md2doc" 
   version="3.0">
   <xd:doc scope="stylesheet">
     <xd:desc>
@@ -29,6 +29,7 @@
   
   <xsl:include href="xsl/parseMarkdown.xsl"/>
   <xsl:include href="xsl/html2odd.xsl"/>
+  <xsl:include href="xsl/build.source.xsl"/>
   
   <xsl:variable name="base.path" select="string-join(tokenize(string(document-uri(/)),'/')[position() != last()],'/')" as="xs:string"/>
   <xsl:variable name="guidelines.path.docs" select="$base.path || $guidelines.path || '_guidelines-' || $guidelines.version || '/'" as="xs:string"/>
@@ -43,6 +44,8 @@
       <xsl:sequence select="$chapter.file"/>
     </xsl:for-each>
   </xsl:variable>
+  
+  <xsl:variable name="modules" select="uri-collection($base.path || '/modules/?select=*.xml')" as="xs:string*"/>
   
   <xd:doc>
     <xd:desc>
@@ -71,6 +74,14 @@
       </xsl:result-document>
     </xsl:for-each>
     
+    <xsl:message select="'modules: ' || count($modules)"/>
+    
+    <xsl:result-document href="{$base.path || $guidelines.path || '/tools/meiGuidelines_back2odd/export/'}/mei-source-new.xml">
+      <xsl:apply-templates select="node()" mode="rebuild.source">
+        <xsl:with-param name="chapters" select="$files" as="node()*" tunnel="yes"/>
+        <xsl:with-param name="modules" select="$modules" as="xs:string*" tunnel="yes"/>
+      </xsl:apply-templates>
+    </xsl:result-document>
     <!--<xsl:apply-templates select="node()"/>-->
   </xsl:template>
   

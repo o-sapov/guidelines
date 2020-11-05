@@ -42,12 +42,12 @@
     
     <xsl:variable name="html" select="md2doc:get-html(string-join($marked.glosses,' '))" as="node()*"/>
     <xsl:variable name="level" select="'div' || string(count(tokenize($file.path,'/')))" as="xs:string"/>
-    <xsl:if test="$sectionid = 'cmnOrnamentsMordents'">
+    <!--<xsl:if test="$sectionid = 'cmnOrnamentsMordents'">
       <xsl:message select="$marked.glosses"></xsl:message>
       <xsl:message select="$html"/>
       <xsl:message select="$file.path"/>
       <xsl:message select="$path"/>
-    </xsl:if>
+    </xsl:if>-->
     
     <xsl:variable name="blank.filename" select="substring($file.path,1,string-length($file.path) - 3)" as="xs:string"/>
     <!--<xsl:message select="'Exporting ' || $blank.filename || ' to ' || $export.path"/>-->
