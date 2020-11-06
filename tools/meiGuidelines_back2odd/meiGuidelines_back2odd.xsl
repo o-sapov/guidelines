@@ -8,9 +8,10 @@
   xmlns:rng="http://relaxng.org/ns/structure/1.0"
   xmlns:sch="http://purl.oclc.org/dsdl/schematron" 
   xmlns:xi="http://www.w3.org/2001/XInclude"
-  xmlns:func="no:link"
+  xmlns:func="no:link"  
+  xmlns:file="http://expath.org/ns/file"
   xmlns:md2doc="http://www.markdown2docbook.com/ns/md2doc"
-  exclude-result-prefixes="xs math xd mei rng sch func md2doc" 
+  exclude-result-prefixes="xs math xd mei rng sch func md2doc file" 
   version="3.0">
   <xd:doc scope="stylesheet">
     <xd:desc>
@@ -33,9 +34,11 @@
   
   <xsl:variable name="base.path" select="string-join(tokenize(string(document-uri(/)),'/')[position() != last()],'/')" as="xs:string"/>
   <xsl:variable name="guidelines.path.docs" select="$base.path || $guidelines.path || '_guidelines-' || $guidelines.version || '/'" as="xs:string"/>
-  <xsl:variable name="guidelines.path.includes" select="$base.path || $guidelines.path || '_includes/' || $guidelines.version || '/'" as="xs:string"/>
+  <xsl:variable name="guidelines.path.includes" select="$base.path || $guidelines.path || '_includes/' || $guidelines.version || '/examples/'" as="xs:string"/>
+  <xsl:variable name="guidelines.path.images" select="$base.path || $guidelines.path || 'images/' || $guidelines.version || '/'" as="xs:string"/>
   
   <xsl:variable name="guidelines.path.docs.export" select="$base.path || $guidelines.path || '/tools/meiGuidelines_back2odd/export/' || $guidelines.version || '/'" as="xs:string"/>
+  <xsl:variable name="export.path" select="$base.path || $guidelines.path || '/tools/meiGuidelines_back2odd/export/'" as="xs:string"/>
   
   <xsl:variable name="files" as="node()*">
     <xsl:for-each select="uri-collection($guidelines.path.docs || '?select=*.md')">
@@ -46,6 +49,7 @@
   </xsl:variable>
   
   <xsl:variable name="modules" select="uri-collection($base.path || '/modules/?select=*.xml')" as="xs:string*"/>
+  <xsl:variable name="modules.files" select="collection($base.path || '/modules/?select=*.xml')" as="node()*"/>
   
   <xd:doc>
     <xd:desc>
@@ -54,32 +58,113 @@
   </xd:doc>
   <xsl:template match="/">
     <xsl:message select="'files: ' || count($files)"/>
-    <xsl:for-each select="$files">
-      <xsl:variable name="current.file" select="." as="node()"/>
-      <!--<xsl:message select="'aiming at ' || $guidelines.path.docs.export || $current.file/@path"/>-->
-      <xsl:variable name="html.prepped" as="node()*">
-        <xsl:apply-templates select="$current.file/child::node()" mode="html2odd.prep"/>
-      </xsl:variable>
-      <xsl:variable name="odd.prepped" as="node()*">
-        <xsl:apply-templates select="$html.prepped" mode="html2odd"/>
-      </xsl:variable>
-      <xsl:variable name="odd.cleaned" as="node()*">
-        <xsl:apply-templates select="$odd.prepped" mode="html2odd.post"/>
-      </xsl:variable>
-      <xsl:result-document href="{$guidelines.path.docs.export || $current.file/@path}" indent="yes" method="xml">
-        <div xmlns="http://www.tei-c.org/ns/1.0" xml:id="{$current.file/@sectionid}" type="{$current.file/@level}">
+    <xsl:variable name="converted.files" as="node()*">
+      <xsl:for-each select="$files">
+        <xsl:variable name="current.file" select="." as="node()"/>
+        <!--<xsl:message select="'aiming at ' || $guidelines.path.docs.export || $current.file/@path"/>-->
+        <xsl:variable name="html.prepped" as="node()*">
+          <xsl:apply-templates select="$current.file/child::node()" mode="html2odd.prep"/>
+        </xsl:variable>
+        <xsl:variable name="odd.prepped" as="node()*">
+          <xsl:apply-templates select="$html.prepped" mode="html2odd">
+            <xsl:with-param name="chapters" select="$files" as="node()*" tunnel="yes"/>
+            <xsl:with-param name="modules" select="$modules.files" as="node()*" tunnel="yes"/>
+            <xsl:with-param name="export.path" select="$export.path" as="xs:string" tunnel="yes"/>
+            <xsl:with-param name="examples.path" select="$guidelines.path.includes" as="xs:string" tunnel="yes"/>
+            <xsl:with-param name="images.path" select="$guidelines.path.images" as="xs:string" tunnel="yes"/>
+          </xsl:apply-templates>
+        </xsl:variable>
+        <xsl:variable name="odd.cleaned" as="node()*">
+          <xsl:apply-templates select="$odd.prepped" mode="html2odd.post">
+            <xsl:with-param name="export.path" select="$export.path" as="xs:string" tunnel="yes"/>
+            <xsl:with-param name="examples.path" select="$guidelines.path.includes" as="xs:string" tunnel="yes"/>
+            <xsl:with-param name="images.path" select="$guidelines.path.images" as="xs:string" tunnel="yes"/>
+          </xsl:apply-templates>
+        </xsl:variable>
+        <!--<xsl:result-document href="{$guidelines.path.docs.export || $current.file/@path}" indent="yes" method="xml">-->
+        <div xmlns="http://www.tei-c.org/ns/1.0" xml:id="{$current.file/@sectionid}" type="{$current.file/@level}" path="{$current.file/@path}">
           <head><xsl:value-of select="$current.file/@title"/></head>
           <xsl:sequence select="$odd.cleaned"/>
         </div>        
-      </xsl:result-document>
+        <!--</xsl:result-document>-->
+      </xsl:for-each>
+    </xsl:variable>
+    
+    <!-- copy example files -->
+    <xsl:for-each select="distinct-values($converted.files//*:egXML//@href)">
+      <xsl:variable name="target" select="." as="xs:string"/>
+      <xsl:variable name="doc.available" select="doc-available($guidelines.path.includes || $target)" as="xs:boolean"/>
+      <xsl:variable name="text.available" select="unparsed-text-available($guidelines.path.includes || $target)" as="xs:boolean"/>
+      <xsl:variable name="xml.doc.available" select="doc-available($guidelines.path.includes || replace($target,'.txt','.xml'))" as="xs:boolean"/>
+      <xsl:variable name="xml.text.available" select="unparsed-text-available($guidelines.path.includes || replace($target,'.txt','.xml'))" as="xs:boolean"/>
+      <xsl:variable name="href" select="$export.path || 'examples/' || $target"/>
+      <xsl:choose>
+        <xsl:when test="$doc.available">
+          <xsl:result-document href="{$href}">
+            <xsl:sequence select="doc($guidelines.path.includes || $target)"/>
+          </xsl:result-document>
+        </xsl:when>
+        <xsl:when test="$text.available">
+          <xsl:result-document href="{$href}" method="html">
+            <xsl:sequence select="unparsed-text($guidelines.path.includes || $target, 'UTF-8')" />
+          </xsl:result-document>
+        </xsl:when>
+        <xsl:when test="$xml.doc.available">
+          <xsl:result-document href="{$href}">
+            <xsl:sequence select="doc($guidelines.path.includes || replace($target,'.txt','.xml'))"/>
+          </xsl:result-document>
+        </xsl:when>
+        <xsl:when test="$xml.text.available">
+          <xsl:result-document href="{$href}" method="text">
+            <xsl:sequence select="unparsed-text($guidelines.path.includes || replace($target,'.txt','.xml'), 'UTF-8')"/>
+          </xsl:result-document>
+        </xsl:when>
+      </xsl:choose>
     </xsl:for-each>
+    
+    <!-- control image files -->
+    <xsl:variable name="used.images" select="distinct-values($converted.files//*:graphic/@url)" as="xs:string*"/>
+    <xsl:variable name="available.images" as="xs:string*">
+      <xsl:sequence select="uri-collection($guidelines.path.images || '?select=*.png;recurse=yes')"/>
+      <xsl:sequence select="uri-collection($guidelines.path.images || '?select=*.jpg;recurse=yes')"/>
+      <xsl:sequence select="uri-collection($guidelines.path.images || '?select=*.gif;recurse=yes')"/>
+      <xsl:sequence select="uri-collection($guidelines.path.images || '?select=*.bmp;recurse=yes')"/>
+    </xsl:variable>
+    <xsl:message select="'Unused images: ' || (count(distinct-values($available.images)) - count($used.images))"/>
+    <xsl:result-document href="{$export.path}unusedImages.txt" method="text">
+      <xsl:for-each select="distinct-values($available.images)">
+        <xsl:sort select="." data-type="text"/>
+        <xsl:if test="not(substring-after(.,'guidelines/images/dev/') = $used.images)">
+          <xsl:value-of select="substring-after(.,'guidelines/images/dev/') || '&#10;'"/>  
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:result-document>
+    <xsl:result-document href="{$export.path}usedImages.txt" method="text">
+      <xsl:for-each select="distinct-values($used.images)[not(starts-with(.,'https://'))]">
+        <xsl:sort select="." data-type="text"/>
+        <xsl:value-of select=". || '&#10;'"/>        
+      </xsl:for-each>
+    </xsl:result-document>
+    <!-- try to copy images -->
+    <xsl:for-each select="distinct-values($used.images)[not(starts-with(.,'https://'))]">
+      <xsl:variable name="target" select="." as="xs:string"/>
+      <xsl:variable name="source.path" select="$guidelines.path.images || $target" as="xs:string"/>
+      <xsl:sequence select="file:copy($source.path, $export.path || 'images/' || .)"/>
+       <!-- 
+        file:copy($source as xs:string,
+          $target as xs:string)
+       -->
+    </xsl:for-each>
+    <!--<xsl:variable name="image.available" select="file:exists(file:new('../../guidelines/images/dev/' || $target))" as="xs:boolean"/>-->
+    
     
     <xsl:message select="'modules: ' || count($modules)"/>
     
-    <xsl:result-document href="{$base.path || $guidelines.path || '/tools/meiGuidelines_back2odd/export/'}/mei-source-new.xml">
+    <xsl:result-document href="{$export.path}/mei-source-full.xml">
       <xsl:apply-templates select="node()" mode="rebuild.source">
-        <xsl:with-param name="chapters" select="$files" as="node()*" tunnel="yes"/>
+        <xsl:with-param name="chapters" select="$converted.files" as="node()*" tunnel="yes"/>
         <xsl:with-param name="modules" select="$modules" as="xs:string*" tunnel="yes"/>
+        <xsl:with-param name="path" select="$export.path" as="xs:string" tunnel="yes"/>
       </xsl:apply-templates>
     </xsl:result-document>
     <!--<xsl:apply-templates select="node()"/>-->

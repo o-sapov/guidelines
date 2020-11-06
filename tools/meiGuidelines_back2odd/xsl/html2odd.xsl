@@ -5,6 +5,7 @@
   xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
   xmlns:func="no:link"
   xmlns:tei="http://www.tei-c.org/ns/1.0"
+  xmlns:file="java.io.File"
   exclude-result-prefixes="xs math xd func tei"
   version="3.0">
   <xd:doc scope="stylesheet">
@@ -51,18 +52,35 @@
     </hi>
   </xsl:template>
   
-  <xsl:template match="text()" mode="html2odd.prep" priority="1">    
-    <xsl:analyze-string select="." regex="GLOSSLIST-LABEL-(.+?)-ENDLABEL-ITEM-(.*?)-ENDITEM-ENDGLOSSLIST">
+  <xsl:template match="text()" mode="html2odd.prep" priority="1">
+    
+    <xsl:analyze-string select="." regex="GLOSSLIST-LABEL-(.+?)-ENDLABEL-ITEM-(.*?)-ENDITEM-ENDGLOSSLIST" flags="m">
       <xsl:matching-substring>
         <list xmlns="http://www.tei-c.org/ns/1.0" type="gloss"><label><xsl:value-of select="regex-group(1)"/></label><item><xsl:value-of select="regex-group(2)"/></item></list>
       </xsl:matching-substring>
       <xsl:non-matching-substring>
-        <xsl:sequence select="."/>
+        <!-- resolve regular lists -->
+        <!-- REGULARLIST-LISTITEM-<xsl:value-of select="$current.line"/>-ENDLISTITEM<xsl:value-of select="$other.lines.string"/>-ENDREGULARLIST -->
+        <xsl:analyze-string select="." regex="REGULARLIST-- (.+?)-ENDREGULARLIST" flags="m">
+          <xsl:matching-substring>
+            <list xmlns="http://www.tei-c.org/ns/1.0" type="bulleted"><item><xsl:value-of select="regex-group(1)"/></item></list>
+          </xsl:matching-substring>
+          <xsl:non-matching-substring>
+            <xsl:sequence select="."/>
+          </xsl:non-matching-substring>
+        </xsl:analyze-string>
+        
       </xsl:non-matching-substring>
     </xsl:analyze-string>
   </xsl:template>
   
   <xsl:template match="text()" mode="html2odd" priority="1">
+    <xsl:param name="chapters" as="node()*" tunnel="yes"/>
+    <xsl:param name="modules" as="node()*" tunnel="yes"/>
+    <xsl:param name="export.path" as="xs:string" tunnel="yes"/>
+    <xsl:param name="examples.path" as="xs:string" tunnel="yes"/>
+    <xsl:param name="images.path" as="xs:string" tunnel="yes"/>
+    
     <xsl:variable name="quot" as="xs:string">"</xsl:variable>
     <xsl:analyze-string select="normalize-space(.)" regex="\{{% include +(link .*?|mei .*?|desc .*?|verovio .*?|figure .*?|smufl .*?|.*?) ?%\}}" flags="s">
       <xsl:matching-substring>
@@ -76,27 +94,44 @@
               <!-- reference to a guidelines chapter -->
               <xsl:when test="$target.type = 'id'">
                 <xsl:variable name="target" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string"/>
-                <ptr xmlns="http://www.tei-c.org/ns/1.0" target="#{$target}"/>
+                <ptr xmlns="http://www.tei-c.org/ns/1.0" target="#{$target}">
+                  <xsl:if test="not($target = $chapters//@sectionid)">
+                    <xsl:message select="'ERROR: reference to chapter _' || $target || '_ is broken'"/>
+                    <xsl:attribute name="TODO" select="'brokenReference'"/>
+                  </xsl:if>
+                </ptr>                
               </xsl:when>
               
               <!-- reference to an element -->
               <xsl:when test="$target.type = 'elem'">
                 <xsl:variable name="name" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string"/>
-                <gi xmlns="http://www.tei-c.org/ns/1.0" scheme="MEI"><xsl:value-of select="$name"/></gi>
+                <gi xmlns="http://www.tei-c.org/ns/1.0" scheme="MEI">
+                  <xsl:if test="not($name = $modules//tei:elementSpec/@ident)">
+                    <xsl:message select="'ERROR: reference to element _' || $name || '_ is broken'"/>
+                    <xsl:attribute name="TODO" select="'brokenReference'"/>
+                  </xsl:if>
+                  <xsl:value-of select="$name"/></gi>
               </xsl:when>
               
               <!-- reference to an attribute class -->
               <xsl:when test="$target.type = ('att', 'atts')">
                 <xsl:variable name="name" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string"/>
                 <xsl:variable name="full.name" select="if(starts-with($name,'att.')) then($name) else('att.'||$name)"/>
-                <ident xmlns="http://www.tei-c.org/ns/1.0" type="class"><xsl:value-of select="$full.name"/></ident>                
+                <ident xmlns="http://www.tei-c.org/ns/1.0" type="class">
+                  <xsl:if test="not($full.name = $modules//tei:classSpec/@ident)">
+                    <xsl:message select="'ERROR: reference to attribute class _' || $full.name || '_ is broken'"/>
+                    <xsl:attribute name="TODO" select="'brokenReference'"/>
+                  </xsl:if><xsl:value-of select="$full.name"/></ident>                
               </xsl:when>
               
               <!-- reference to a model class -->
               <xsl:when test="$target.type = 'model'">
                 <xsl:variable name="name" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string"/>
                 <xsl:variable name="full.name" select="if(starts-with($name,'model.')) then($name) else('model.'||$name)"/>
-                <ident xmlns="http://www.tei-c.org/ns/1.0" type="class"><xsl:value-of select="$full.name"/></ident>
+                <ident xmlns="http://www.tei-c.org/ns/1.0" type="class"><xsl:if test="not($full.name = $modules//tei:classSpec/@ident)">
+                  <xsl:message select="'ERROR: reference to model class _' || $full.name || '_ is broken'"/>
+                  <xsl:attribute name="TODO" select="'brokenReference'"/>
+                </xsl:if><xsl:value-of select="$full.name"/></ident>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:message select="'ERROR: Unable to resolve target.type _' || $target.type || '_'"/>
@@ -113,7 +148,12 @@
               <xsl:when test="$target.type = 'elem'">
                 <xsl:variable name="name" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string"/>
                 <specList xmlns="http://www.tei-c.org/ns/1.0">
-                  <specDesc key="{$name}"/>
+                  <specDesc key="{$name}">
+                    <xsl:if test="not($name = $modules//tei:elementSpec/@ident)">
+                      <xsl:message select="'ERROR: description reference to element _' || $name || '_ is broken'"/>
+                      <xsl:attribute name="TODO" select="'brokenReference'"/>
+                    </xsl:if>
+                  </specDesc>
                 </specList>
               </xsl:when>
               <xsl:when test="$target.type = 'atts'">
@@ -150,7 +190,7 @@
                 <xsl:when test="not($target) or $target = ''">
                   <xsl:comment>TODO: This figure lacks content; please check!</xsl:comment>
                 </xsl:when>
-                <xsl:when test="ends-with($target, '.jpg') or ends-with($target, '.png')">
+                <xsl:when test="ends-with($target, '.jpg') or ends-with($target, '.png') or ends-with($target, '.gif') or ends-with($target, '.bmp')">
                   <graphic url="{$target}"/>
                 </xsl:when>
                 <xsl:otherwise>
@@ -164,8 +204,14 @@
           <xsl:when test="starts-with(regex-group(1), 'mei')">
             <xsl:variable name="target" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string?"/>
             <xsl:variable name="valid" select="normalize-space(substring-before(substring-after(regex-group(1),'valid='||$quot),$quot))" as="xs:string?"/>
-            
-            <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="code" xml:space="preserve"><xsl:if test="$valid and $valid = ('true', 'false', 'feasible')"><xsl:attribute name="valid" select="$valid"/></xsl:if><include xmlns="use.xinclude" href="{$target}"/></egXML>
+            <xsl:variable name="target.available" select="unparsed-text-available($examples.path || $target)" as="xs:boolean"/>
+            <!--<xsl:if test="$target.available">
+              <xsl:result-document href="{$export.path}examples/{$target}">
+                <xsl:sequence select="unparsed-text($target)"/>
+              </xsl:result-document>
+            </xsl:if>
+            -->
+            <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="code" xml:space="preserve"><xsl:if test="not($target.available)"><xsl:attribute name="TODO" select="'brokenLink'"/></xsl:if><xsl:if test="$valid and $valid = ('true', 'false', 'feasible')"><xsl:attribute name="valid" select="$valid"/></xsl:if><include xmlns="use.xinclude" href="{replace($target,'.xml','.txt')}"/></egXML>
             
           </xsl:when>
           
@@ -173,8 +219,14 @@
           <xsl:when test="starts-with(regex-group(1), 'verovio')">
             <xsl:variable name="target" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string?"/>
             <xsl:variable name="valid" select="normalize-space(substring-before(substring-after(regex-group(1),'valid='||$quot),$quot))" as="xs:string?"/>
-            
-            <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="verovio code" xml:space="preserve"><include xmlns="use.xinclude" href="{$target}"/></egXML>
+            <xsl:variable name="target.available" select="unparsed-text-available($examples.path || $target)" as="xs:boolean"/>
+            <!--<xsl:if test="$target.available">
+              <xsl:result-document href="{$export.path}examples/{$target}">
+                <xsl:sequence select="unparsed-text($target)"/>
+              </xsl:result-document>
+            </xsl:if>
+            -->
+            <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="verovio code" xml:space="preserve"><xsl:if test="not($target.available)"><xsl:attribute name="TODO" select="'brokenLink'"/></xsl:if><include xmlns="use.xinclude" href="{replace($target,'.xml','.txt')}"/></egXML>
             
           </xsl:when>
           
@@ -211,12 +263,36 @@
     </xsl:choose>
   </xsl:template>
   
+  <xsl:template match="tei:list[@type='bulleted']" mode="html2odd.post">
+    <xsl:variable name="list" select="." as="node()"/>
+    <xsl:variable name="prec.1" select="preceding-sibling::tei:*[1]" as="node()?"/>
+    <xsl:variable name="foll.1" select="func:getFollowingBulletedLists($list)" as="node()*"/>
+    <xsl:choose>
+      <xsl:when test="exists($prec.1) and local-name($prec.1) = 'list' and $prec.1/@type = 'bulleted'"/>
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:apply-templates select="@*" mode="#current"/>
+          <xsl:apply-templates select="node() | $foll.1/child::node()"/>
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
   <xsl:function name="func:getFollowingGlossLists" as="node()*">
     <xsl:param name="elem" as="node()"/>
     <xsl:variable name="foll.1" select="$elem/following-sibling::tei:*[1]" as="node()?"/>
     <xsl:if test="exists($foll.1) and local-name($foll.1) = 'list' and $foll.1/@type = 'gloss'">
       <xsl:sequence select="$foll.1"/>
       <xsl:sequence select="func:getFollowingGlossLists($foll.1)"/>
+    </xsl:if>
+  </xsl:function>
+  
+  <xsl:function name="func:getFollowingBulletedLists" as="node()*">
+    <xsl:param name="elem" as="node()"/>
+    <xsl:variable name="foll.1" select="$elem/following-sibling::tei:*[1]" as="node()?"/>
+    <xsl:if test="exists($foll.1) and local-name($foll.1) = 'list' and $foll.1/@type = 'bulleted'">
+      <xsl:sequence select="$foll.1"/>
+      <xsl:sequence select="func:getFollowingBulletedLists($foll.1)"/>
     </xsl:if>
   </xsl:function>
   

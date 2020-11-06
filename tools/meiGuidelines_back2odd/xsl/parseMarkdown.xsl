@@ -90,6 +90,10 @@
             <!--<xsl:message select="'GLOSS: _' || $label || '_ – _' || $item || '_'"/>-->
             <xsl:if test="$label">GLOSSLIST-LABEL-<xsl:value-of select="$label"/>-ENDLABEL-ITEM-<xsl:value-of select="$item"/>-ENDITEM-ENDGLOSSLIST</xsl:if>
           </xsl:when>
+          <!-- resolve other lists -->
+          <xsl:when test="starts-with($current.line,'- ')">
+            REGULARLIST-<xsl:value-of select="$current.line"/>-ENDREGULARLIST
+          </xsl:when>
           <xsl:otherwise>
             <xsl:sequence select="$current.line"/>
           </xsl:otherwise>
