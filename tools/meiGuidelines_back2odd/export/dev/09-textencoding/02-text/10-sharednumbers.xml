@@ -1,6 +1,0 @@
-<p xmlns="http://www.tei-c.org/ns/1.0">The <gi scheme="MEI">num</gi> element may be used to identify any numeric information in a text. The<hi rend="bold">@unit</hi>may be used to specify the unit of measurement. <specList>
-      <specDesc key="num"/>
-   </specList>
-   <specList>
-      <specDesc key="att.measurement" atts="unit"/>
-   </specList> This element is useful when it is necessary to provide specific information about numeric data, such as the unit of measurement or the kind of quantity described, or when it should be displayed in a special manner.</p>

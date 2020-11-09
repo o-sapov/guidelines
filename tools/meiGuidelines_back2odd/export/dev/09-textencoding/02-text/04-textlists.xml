@@ -1,9 +1,0 @@
-<p xmlns="http://www.tei-c.org/ns/1.0">When a text contains lists, they can be encoded with the following elements: <specList>
-      <specDesc key="list"/>
-   </specList>
-   <specList>
-      <specDesc key="head"/>
-   </specList>
-   <specList>
-      <specDesc key="item"/>
-   </specList> The <gi scheme="MEI">list</gi> element can identify any kind of list; the<hi rend="bold">@form</hi>attribute can be used to specify whether the list is ordered, unordered etc. Each item in the list is encoded with the <gi scheme="MEI">li</gi> element. The<hi rend="bold">@n</hi>can be used to record a label for a list item, as in the following example:  Occasionally, lists have headers or titles, which can be encoded with <gi scheme="MEI">head</gi>: </p>

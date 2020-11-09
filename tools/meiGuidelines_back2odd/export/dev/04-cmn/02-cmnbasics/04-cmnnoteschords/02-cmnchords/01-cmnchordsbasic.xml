@@ -1,5 +1,0 @@
-<p xmlns="http://www.tei-c.org/ns/1.0">A chord is any set of pitches consisting of multiple notes that are to be played simultaneously and are usually grouped together visually with a single stem. In MEI the <gi scheme="MEI">chord</gi> element functions as a container for all participating notes. Also it features many attributes that are allowed for notes, e.g. usually all notes in a chord have a common duration, so it can be applied to the whole chord within it's<hi rend="bold">@dur</hi>attribute. Some notational features like articulations or lyrics are connected to a whole chord instead of a single note. Therefore elements like <gi scheme="MEI">artic</gi> or <gi scheme="MEI">verse</gi> are also allowed as children of <gi scheme="MEI">chord</gi> elements. In the follwing example from Sergei Rachmaninoff's<hi rend="italic">Prelude in C-sharp minor</hi>, Op. 3, No. 2 all chords carry an accent. <figure>
-      <head>Chords in Rachmaninoff's Prelude in C-sharp minor, Op. 3, No. 2</head>
-      <graphic url="ExampleImages/RachmaninoffPrelude.png"/>
-   </figure>
-</p>

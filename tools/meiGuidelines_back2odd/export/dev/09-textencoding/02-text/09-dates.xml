@@ -1,6 +1,0 @@
-<p xmlns="http://www.tei-c.org/ns/1.0">The <gi scheme="MEI">date</gi> element may be used to mark up portions of a text that denote a date. <specList>
-      <specDesc key="date"/>
-   </specList> The element <gi scheme="MEI">date</gi> contains a date in any format, including a date range. A date range may be expressed as textual content or, when intervening punctuation is present, as a combination of date sub-elements and text.  To be more specific about the date, the attributes in the <ident type="class">att.datable</ident> and <ident type="class">att.calendared</ident> classes can be used: <specList>
-      <specDesc key="att.datable" atts="startdate enddate notbefore notafter isodate"/>
-      <specDesc key="att.calendared" atts="calendar"/>
-   </specList> In the following example, the ambiguous date text "5/3/05" is resolved using the<hi rend="bold">@isodate</hi>attribute: </p>

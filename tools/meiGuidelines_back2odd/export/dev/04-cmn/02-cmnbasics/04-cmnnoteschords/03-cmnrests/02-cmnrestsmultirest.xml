@@ -1,5 +1,0 @@
-<p xmlns="http://www.tei-c.org/ns/1.0">The <gi scheme="MEI">multiRest</gi> (multiple measure rest) element is used to encode multiple measures of rest. It is commonly used in performer parts, but due to the problem of synchronicity with other staves, it is never found in scores. A numeric value, stored in the<hi rend="bold">@num</hi>attribute, indicates the number of resting measures. The older visual forms displayed below (often callled<hi rend="italic">Kirchenpausen</hi>) are not captured by <gi scheme="MEI">multiRest</gi>, but may be created by rendering software. You may force modern block rests by using the<hi rend="bold">@block</hi>attribute. <figure>
-      <head>Forms of multiple measure rests</head>
-      <graphic url="ExampleImages/multirest.png"/>
-   </figure>
-</p>

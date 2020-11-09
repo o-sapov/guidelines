@@ -1,3 +1,0 @@
-<p xmlns="http://www.tei-c.org/ns/1.0">The <gi scheme="MEI">name</gi> element may be used to mark up portions of a text that function as name. <specList>
-      <specDesc key="name"/>
-   </specList> The <gi scheme="MEI">name</gi> element is intended for generic applications and may be used to identify any named entity, such as a person, item, application, place, etc. Sometimes, however, a more specific encoding is desired, identifying the type of entity by using dedicated elements. MEI offers an (optional) module for this, which provides such elements for various types of names.</p>

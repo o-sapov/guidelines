@@ -6,7 +6,7 @@
   xmlns:func="no:link"
   xmlns:tei="http://www.tei-c.org/ns/1.0"
   xmlns:file="java.io.File"
-  exclude-result-prefixes="xs math xd func tei"
+  exclude-result-prefixes="xs math xd func tei file"
   version="3.0">
   <xd:doc scope="stylesheet">
     <xd:desc>
@@ -16,66 +16,81 @@
     </xd:desc>
   </xd:doc>
   
-  <xsl:template match="p" mode="html2odd">
-    <p xmlns="http://www.tei-c.org/ns/1.0">
-      <xsl:apply-templates select="node() | @*" mode="#current"/>
-    </p>
-  </xsl:template>
-  
-  <xsl:template match="a[.//text()]" mode="html2odd">
-    <ref xmlns="http://www.tei-c.org/ns/1.0">
-      <xsl:apply-templates select="node() | @*" mode="#current"/>
-    </ref>
-  </xsl:template>
-  
-  <xsl:template match="a[not(.//text())]" mode="html2odd">
-    <ptr xmlns="http://www.tei-c.org/ns/1.0">
-      <xsl:apply-templates select="node() | @*" mode="#current"/>
-    </ptr>
-  </xsl:template>
-  
-  <xsl:template match="a/@href" mode="html2odd">
-    <xsl:attribute name="target" select="."/>    
-  </xsl:template>
-  
-  <xsl:template match="a/@title" mode="html2odd"/>
-  
-  <xsl:template match="em" mode="html2odd">
-    <hi xmlns="http://www.tei-c.org/ns/1.0" rend="italic">
-      <xsl:apply-templates select="node() | @*" mode="#current"/>
-    </hi>
-  </xsl:template>
-  
-  <xsl:template match="strong" mode="html2odd">
-    <hi xmlns="http://www.tei-c.org/ns/1.0" rend="bold">
-      <xsl:apply-templates select="node() | @*" mode="#current"/>
-    </hi>
-  </xsl:template>
   
   <xsl:template match="text()" mode="html2odd.prep" priority="1">
+    <xsl:param name="chapters" as="xs:string*" tunnel="yes"/>
+    <xsl:param name="modules" as="node()*" tunnel="yes"/>
+    <xsl:param name="export.path" as="xs:string" tunnel="yes"/>
+    <xsl:param name="examples.path" as="xs:string" tunnel="yes"/>
+    <xsl:param name="images.path" as="xs:string" tunnel="yes"/>
     
-    <xsl:analyze-string select="." regex="GLOSSLIST-LABEL-(.+?)-ENDLABEL-ITEM-(.*?)-ENDITEM-ENDGLOSSLIST" flags="m">
+    <xsl:variable name="step.1" as="node()*">
+      <xsl:analyze-string select="." regex="\[(.*?)\]\((.*?)\)" flags="ms">
+        <xsl:matching-substring>
+          <ref xmlns="http://www.tei-c.org/ns/1.0" target="{regex-group(2)}"><xsl:value-of select="regex-group(1)"/></ref>
+        </xsl:matching-substring>
+        <xsl:non-matching-substring>
+          <xsl:value-of select="."/>
+        </xsl:non-matching-substring>
+      </xsl:analyze-string>  
+    </xsl:variable>
+    
+    <xsl:variable name="step.2" as="node()*">
+      <xsl:apply-templates select="$step.1" mode="html2odd.resolveIncludes">
+        <xsl:with-param name="chapters" select="$chapters" as="xs:string*" tunnel="yes"/>
+        <xsl:with-param name="modules" select="$modules" as="node()*" tunnel="yes"/>
+        <xsl:with-param name="export.path" select="$export.path" as="xs:string" tunnel="yes"/>
+        <xsl:with-param name="examples.path" select="$examples.path" as="xs:string" tunnel="yes"/>
+        <xsl:with-param name="images.path" select="$images.path" as="xs:string" tunnel="yes"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    
+    <xsl:variable name="step.3" as="node()*">
+      <xsl:apply-templates select="$step.2" mode="html2odd.resolveRend"/>
+    </xsl:variable>
+    
+    
+    
+    <xsl:sequence select="$step.3"/>
+  </xsl:template>
+  
+  <!-- resolve rends, including references to attributes -->
+  <xsl:template match="text()" mode="html2odd.resolveRend" priority="1">
+    
+    <xsl:analyze-string select="." regex="((\*{{1,3}})(.*?)\2)" flags="ms">
       <xsl:matching-substring>
-        <list xmlns="http://www.tei-c.org/ns/1.0" type="gloss"><label><xsl:value-of select="regex-group(1)"/></label><item><xsl:value-of select="regex-group(2)"/></item></list>
+        <xsl:variable name="rend" as="xs:string">
+          <xsl:choose>
+            <xsl:when test="starts-with(regex-group(1),'***')">
+              <xsl:value-of select="'bold italic'"/>
+            </xsl:when>
+            <xsl:when test="starts-with(regex-group(1),'**2')">
+              <xsl:value-of select="'bold'"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="'italic'"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="isAttribute" select="starts-with(regex-group(3),'@')" as="xs:boolean"/>
+        <xsl:choose>
+          <xsl:when test="$isAttribute">
+            <att xmlns="http://www.tei-c.org/ns/1.0"><xsl:value-of select="substring(regex-group(3),2)"/></att>
+          </xsl:when>
+          <xsl:otherwise>
+            <hi xmlns="http://www.tei-c.org/ns/1.0" rend="{$rend}"><xsl:value-of select="regex-group(3)"/></hi>
+          </xsl:otherwise>
+        </xsl:choose>        
       </xsl:matching-substring>
       <xsl:non-matching-substring>
-        <!-- resolve regular lists -->
-        <!-- REGULARLIST-LISTITEM-<xsl:value-of select="$current.line"/>-ENDLISTITEM<xsl:value-of select="$other.lines.string"/>-ENDREGULARLIST -->
-        <xsl:analyze-string select="." regex="REGULARLIST-- (.+?)-ENDREGULARLIST" flags="m">
-          <xsl:matching-substring>
-            <list xmlns="http://www.tei-c.org/ns/1.0" type="bulleted"><item><xsl:value-of select="regex-group(1)"/></item></list>
-          </xsl:matching-substring>
-          <xsl:non-matching-substring>
-            <xsl:sequence select="."/>
-          </xsl:non-matching-substring>
-        </xsl:analyze-string>
-        
+        <xsl:value-of select="."/>
       </xsl:non-matching-substring>
     </xsl:analyze-string>
   </xsl:template>
   
-  <xsl:template match="text()" mode="html2odd" priority="1">
-    <xsl:param name="chapters" as="node()*" tunnel="yes"/>
+  
+  <xsl:template match="text()" mode="html2odd.resolveIncludes" priority="1">
+    <xsl:param name="chapters" as="xs:string*" tunnel="yes"/>
     <xsl:param name="modules" as="node()*" tunnel="yes"/>
     <xsl:param name="export.path" as="xs:string" tunnel="yes"/>
     <xsl:param name="examples.path" as="xs:string" tunnel="yes"/>
@@ -95,7 +110,7 @@
               <xsl:when test="$target.type = 'id'">
                 <xsl:variable name="target" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string"/>
                 <ptr xmlns="http://www.tei-c.org/ns/1.0" target="#{$target}">
-                  <xsl:if test="not($target = $chapters//@sectionid)">
+                  <xsl:if test="not($target = $chapters)">
                     <xsl:message select="'ERROR: reference to chapter _' || $target || '_ is broken'"/>
                     <xsl:attribute name="TODO" select="'brokenReference'"/>
                   </xsl:if>
@@ -219,14 +234,14 @@
           <xsl:when test="starts-with(regex-group(1), 'verovio')">
             <xsl:variable name="target" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string?"/>
             <xsl:variable name="valid" select="normalize-space(substring-before(substring-after(regex-group(1),'valid='||$quot),$quot))" as="xs:string?"/>
-            <xsl:variable name="target.available" select="unparsed-text-available($examples.path || $target)" as="xs:boolean"/>
+            <xsl:variable name="target.available" select="unparsed-text-available($examples.path || '../../../mei/dev/' || $target)" as="xs:boolean"/>
             <!--<xsl:if test="$target.available">
               <xsl:result-document href="{$export.path}examples/{$target}">
                 <xsl:sequence select="unparsed-text($target)"/>
               </xsl:result-document>
             </xsl:if>
             -->
-            <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="verovio code" xml:space="preserve"><xsl:if test="not($target.available)"><xsl:attribute name="TODO" select="'brokenLink'"/></xsl:if><include xmlns="use.xinclude" href="{replace($target,'.xml','.txt')}"/></egXML>
+            <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="verovio code" xml:space="preserve"><xsl:if test="not($target.available)"><xsl:attribute name="TODO" select="'brokenLink'"/></xsl:if><include xmlns="use.xinclude" href="{$target}"/></egXML>
             
           </xsl:when>
           
@@ -247,53 +262,5 @@
     </xsl:analyze-string>
     
   </xsl:template>
-  
-  <xsl:template match="tei:list[@type='gloss']" mode="html2odd.post">
-    <xsl:variable name="list" select="." as="node()"/>
-    <xsl:variable name="prec.1" select="preceding-sibling::tei:*[1]" as="node()?"/>
-    <xsl:variable name="foll.1" select="func:getFollowingGlossLists($list)" as="node()*"/>
-    <xsl:choose>
-      <xsl:when test="exists($prec.1) and local-name($prec.1) = 'list' and $prec.1/@type = 'gloss'"/>
-      <xsl:otherwise>
-        <xsl:copy>
-          <xsl:apply-templates select="@*" mode="#current"/>
-          <xsl:apply-templates select="node() | $foll.1/child::node()"/>
-        </xsl:copy>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-  
-  <xsl:template match="tei:list[@type='bulleted']" mode="html2odd.post">
-    <xsl:variable name="list" select="." as="node()"/>
-    <xsl:variable name="prec.1" select="preceding-sibling::tei:*[1]" as="node()?"/>
-    <xsl:variable name="foll.1" select="func:getFollowingBulletedLists($list)" as="node()*"/>
-    <xsl:choose>
-      <xsl:when test="exists($prec.1) and local-name($prec.1) = 'list' and $prec.1/@type = 'bulleted'"/>
-      <xsl:otherwise>
-        <xsl:copy>
-          <xsl:apply-templates select="@*" mode="#current"/>
-          <xsl:apply-templates select="node() | $foll.1/child::node()"/>
-        </xsl:copy>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-  
-  <xsl:function name="func:getFollowingGlossLists" as="node()*">
-    <xsl:param name="elem" as="node()"/>
-    <xsl:variable name="foll.1" select="$elem/following-sibling::tei:*[1]" as="node()?"/>
-    <xsl:if test="exists($foll.1) and local-name($foll.1) = 'list' and $foll.1/@type = 'gloss'">
-      <xsl:sequence select="$foll.1"/>
-      <xsl:sequence select="func:getFollowingGlossLists($foll.1)"/>
-    </xsl:if>
-  </xsl:function>
-  
-  <xsl:function name="func:getFollowingBulletedLists" as="node()*">
-    <xsl:param name="elem" as="node()"/>
-    <xsl:variable name="foll.1" select="$elem/following-sibling::tei:*[1]" as="node()?"/>
-    <xsl:if test="exists($foll.1) and local-name($foll.1) = 'list' and $foll.1/@type = 'bulleted'">
-      <xsl:sequence select="$foll.1"/>
-      <xsl:sequence select="func:getFollowingBulletedLists($foll.1)"/>
-    </xsl:if>
-  </xsl:function>
-  
+
 </xsl:stylesheet>

@@ -1,5 +1,0 @@
-<p xmlns="http://www.tei-c.org/ns/1.0">The <gi scheme="MEI">mSpace</gi> (measure space) element is closely related to the <gi scheme="MEI">space</gi> and <gi scheme="MEI">mRest</gi> elements. It is used to explicitly indicate that a layer has no content but that no information is missing from the encoding. <figure>
-      <head>Empty measure</head>
-      <graphic url="ExampleImages/mspace.1.png"/>
-   </figure>
-</p>

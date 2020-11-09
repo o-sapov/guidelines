@@ -5,8 +5,10 @@
     xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
     xmlns:func="no:link"
     xmlns:tei="http://www.tei-c.org/ns/1.0"
+    xmlns:ex="http://www.tei-c.org/ns/Examples"
     xmlns:xi="http://www.w3.org/2001/XInclude"
-    exclude-result-prefixes="xs math xd func tei xi"
+    xmlns:temp="use.xinclude"
+    exclude-result-prefixes="xs math xd func tei xi temp ex"
     version="3.0">
     <xd:doc scope="stylesheet">
         <xd:desc>
@@ -127,6 +129,7 @@
         <xsl:variable name="child.type" select="'div' || xs:string(xs:integer(substring(@type,4)) + 1)" as="xs:string"/>
         <xsl:variable name="search.path" select="replace(@path,'.xml','/')" as="xs:string"/>
         <xsl:variable name="child.chapters" select="$chapters/descendant-or-self::node()[@type = $child.type and starts-with(@path, $search.path)]" as="node()*"/>
+                
         <xsl:variable name="content" as="node()+">
             <xsl:copy>
                 <xsl:apply-templates select="node() | @* except @path" mode="#current"/>
@@ -147,6 +150,10 @@
         <xsl:variable name="search.path" select="replace($parent.path,'.xml','/')" as="xs:string"/>
         <xsl:variable name="relevant.chapters" select="$chapters/descendant-or-self::node()[(@level = 'div' || xs:string($level)) and starts-with(@path, $search.path)]" as="node()*"/>
         
+        <xsl:if test="ends-with($parent.path,'cmnNotesBasic.xml')">
+            <xsl:message select="'Welcome to this beautiful mess'"/>
+        </xsl:if>
+        
         <xsl:for-each select="$relevant.chapters">
             <xsl:sort select="@path" data-type="text"/>
             <xsl:variable name="new.num" select="$num || '.' || xs:string(xs:integer(substring-before(substring-after(@path,$search.path),'-')))" as="xs:string"/>
@@ -164,6 +171,20 @@
         <xsl:copy>
             <xsl:apply-templates select="@ref | @xml:id | node()" mode="#current"/>
         </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="temp:include" mode="clean.source">
+        <xsl:element name="xi:include">
+            <xsl:choose>
+                <xsl:when test="ancestor::ex:egXML[@rend = 'code']">
+                    <xsl:attribute name="href" select="'../examples/' || @href"/>
+                </xsl:when>
+                <xsl:when test="ancestor::ex:egXML[@rend = 'verovio code']">
+                    <xsl:attribute name="href" select="'../examples/verovio/' || @href"/>
+                </xsl:when>
+            </xsl:choose>            
+            <xsl:attribute name="parse" select="'text/plain'"/>
+        </xsl:element>
     </xsl:template>
     
     <xsl:template match="tei:p | tei:div | tei:availability | tei:sourceDesc" mode="rebuild.source">

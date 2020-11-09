@@ -1,9 +1,0 @@
-<p xmlns="http://www.tei-c.org/ns/1.0">The following elements are available for description of a composition's performing forces: <specList>
-      <specDesc key="castList"/>
-   </specList>
-   <specList>
-      <specDesc key="perfMedium"/>
-   </specList>
-   <specList>
-      <specDesc key="perfResList"/>
-   </specList> The <gi scheme="MEI">perfMedium</gi> element provides the possibility of describing a work in terms of its medium of performance; that is, the performing forces required. In the case of a dramatic work, the dramatis personae and associated voice qualities may be enumerated using <gi scheme="MEI">castList</gi>. The <gi scheme="MEI">perfResList</gi> element describes the necessary instrumental and vocal resources.</p>
