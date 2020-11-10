@@ -190,19 +190,15 @@
           <!-- An image of some kind -->
           <xsl:when test="starts-with(regex-group(1), 'figure')">
             <xsl:variable name="target" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string?"/>
-            <xsl:variable name="caption" select="normalize-space(substring-before(substring-after(regex-group(1),'caption='||$quot),$quot))" as="xs:string"/>
+            <xsl:variable name="caption" select="normalize-space(substring-before(substring-after(regex-group(1),'caption='||$quot),$quot))" as="xs:string?"/>
             
             <figure xmlns="http://www.tei-c.org/ns/1.0">
               <!-- figure caption -->
-              <xsl:choose>
-                <xsl:when test="not($caption) or $caption = ''"/>                
-                <xsl:otherwise>
-                  <head><xsl:value-of select="$caption"/></head>
-                </xsl:otherwise>
-              </xsl:choose>
+              <head><xsl:value-of select="$caption"/></head>
               <!-- figure content -->
               <xsl:choose>
                 <xsl:when test="not($target) or $target = ''">
+                  <xsl:message select="'ERROR: Figure pointing nowhere… (' || regex-group(1) || ')'"/>
                   <xsl:comment>TODO: This figure lacks content; please check!</xsl:comment>
                 </xsl:when>
                 <xsl:when test="ends-with($target, '.jpg') or ends-with($target, '.png') or ends-with($target, '.gif') or ends-with($target, '.bmp')">
@@ -220,14 +216,17 @@
             <xsl:variable name="target" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string?"/>
             <xsl:variable name="valid" select="normalize-space(substring-before(substring-after(regex-group(1),'valid='||$quot),$quot))" as="xs:string?"/>
             <xsl:variable name="target.available" select="unparsed-text-available($examples.path || $target)" as="xs:boolean"/>
+            <xsl:variable name="caption" select="normalize-space(substring-before(substring-after(regex-group(1),'caption='||$quot),$quot))" as="xs:string?"/>
             <!--<xsl:if test="$target.available">
               <xsl:result-document href="{$export.path}examples/{$target}">
                 <xsl:sequence select="unparsed-text($target)"/>
               </xsl:result-document>
             </xsl:if>
             -->
-            <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="code" xml:space="preserve"><xsl:if test="not($target.available)"><xsl:attribute name="TODO" select="'brokenLink'"/></xsl:if><xsl:if test="$valid and $valid = ('true', 'false', 'feasible')"><xsl:attribute name="valid" select="$valid"/></xsl:if><include xmlns="use.xinclude" href="{replace($target,'.xml','.txt')}"/></egXML>
-            
+            <figure xmlns="http://www.tei-c.org/ns/1.0">
+              <head><xsl:value-of select="$caption"/></head>
+              <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="code" xml:space="preserve"><xsl:if test="not($target.available)"><xsl:attribute name="TODO" select="'brokenLink'"/></xsl:if><xsl:if test="$valid and $valid = ('true', 'false', 'feasible')"><xsl:attribute name="valid" select="$valid"/></xsl:if><include xmlns="use.xinclude" href="{replace($target,'.xml','.txt')}"/></egXML>
+            </figure>
           </xsl:when>
           
           <!-- an MEI example file, which is supposed to be rendered as well (it had an option to turn off showing the XML, but that's never been used) -->
@@ -235,14 +234,17 @@
             <xsl:variable name="target" select="normalize-space(substring-before(substring-after(regex-group(1),$quot),$quot))" as="xs:string?"/>
             <xsl:variable name="valid" select="normalize-space(substring-before(substring-after(regex-group(1),'valid='||$quot),$quot))" as="xs:string?"/>
             <xsl:variable name="target.available" select="unparsed-text-available($examples.path || '../../../mei/dev/' || $target)" as="xs:boolean"/>
+            <xsl:variable name="caption" select="normalize-space(substring-before(substring-after(regex-group(1),'caption='||$quot),$quot))" as="xs:string?"/>
             <!--<xsl:if test="$target.available">
               <xsl:result-document href="{$export.path}examples/{$target}">
                 <xsl:sequence select="unparsed-text($target)"/>
               </xsl:result-document>
             </xsl:if>
             -->
-            <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="verovio code" xml:space="preserve"><xsl:if test="not($target.available)"><xsl:attribute name="TODO" select="'brokenLink'"/></xsl:if><include xmlns="use.xinclude" href="{$target}"/></egXML>
-            
+            <figure xmlns="http://www.tei-c.org/ns/1.0">
+              <head><xsl:value-of select="$caption"/></head>
+              <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="verovio code" xml:space="preserve"><xsl:if test="not($target.available)"><xsl:attribute name="TODO" select="'brokenLink'"/></xsl:if><include xmlns="use.xinclude" href="{$target}"/></egXML>
+            </figure>
           </xsl:when>
           
           <!-- a symbol using a smufl font -->

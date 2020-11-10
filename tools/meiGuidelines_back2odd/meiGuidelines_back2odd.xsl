@@ -9,10 +9,11 @@
   xmlns:rng="http://relaxng.org/ns/structure/1.0"
   xmlns:sch="http://purl.oclc.org/dsdl/schematron" 
   xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:json="http://www.w3.org/2005/xpath-functions"
   xmlns:func="no:link"  
   xmlns:file="http://expath.org/ns/file"
   xmlns:md2doc="http://www.markdown2docbook.com/ns/md2doc"
-  exclude-result-prefixes="xs math xd mei rng sch func md2doc file ex" 
+  exclude-result-prefixes="xs math xd mei rng sch func md2doc file ex json tei" 
   version="3.0">
   <xd:doc scope="stylesheet">
     <xd:desc>
@@ -40,6 +41,26 @@
   
   <xsl:variable name="guidelines.path.docs.export" select="$base.path || $guidelines.path || '/tools/meiGuidelines_back2odd/export/' || $guidelines.version || '/'" as="xs:string"/>
   <xsl:variable name="export.path" select="$base.path || $guidelines.path || '/tools/meiGuidelines_back2odd/export/'" as="xs:string"/>
+  
+  <xsl:variable name="contributors" as="node()*">
+    <xsl:variable name="contrib.raw" select="json-to-xml(unparsed-text('https://api.github.com/repos/music-encoding/guidelines/contributors')) | json-to-xml(unparsed-text('https://api.github.com/repos/music-encoding/music-encoding/contributors'))" as="node()*"/>
+    <xsl:variable name="user.urls" select="distinct-values($contrib.raw//json:map/json:string[@key = 'url']/text())" as="xs:string*"/>
+    <xsl:variable name="user.names" as="node()*">
+      <xsl:for-each select="$user.urls">
+        <xsl:variable name="user.url" select="." as="xs:string"/>
+        <xsl:variable name="user.raw" select="json-to-xml(unparsed-text($user.url))" as="node()"/>
+        <xsl:variable name="user.name" select="$user.raw//json:map/json:string[@key = 'name']/text()" as="xs:string?"/>
+        <name xmlns="http://www.tei-c.org/ns/1.0" ref="{$user.url}"><xsl:value-of select="if($user.name and not($user.name eq '')) then($user.name) else(tokenize($user.url,'/')[last()])"/></name>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:message select="'Contributors:'"/>
+    <xsl:message select="$user.urls"/>
+    <xsl:sequence>
+      <xsl:perform-sort select="$user.names">
+        <xsl:sort select="lower-case(tokenize(normalize-space(text()),' ')[last()])" data-type="text"/>
+      </xsl:perform-sort>
+    </xsl:sequence>
+  </xsl:variable>
   
   <xsl:variable name="files" as="node()*">
     <xsl:for-each select="uri-collection($guidelines.path.docs || '?select=*.md')">
@@ -178,7 +199,7 @@
     <xsl:for-each select="$modules.files">
       <xsl:variable name="filename" select="substring-after(.//tei:specGrp/@xml:id,'module.')" as="xs:string"/>
       <xsl:result-document href="{$export.path}/modules/{$filename}.xml">
-        <xsl:sequence select="."/>
+        <xsl:apply-templates select="." mode="clean.modules"/>
       </xsl:result-document>
     </xsl:for-each>
     
@@ -187,6 +208,7 @@
         <xsl:with-param name="chapters" select="$converted.files" as="node()*" tunnel="yes"/>
         <xsl:with-param name="modules" select="$modules" as="xs:string*" tunnel="yes"/>
         <xsl:with-param name="path" select="$export.path" as="xs:string" tunnel="yes"/>
+        <xsl:with-param name="contributors" select="$contributors" as="node()*" tunnel="yes"/>
       </xsl:apply-templates>
     </xsl:result-document>
     <!--<xsl:apply-templates select="node()"/>-->

@@ -37,9 +37,19 @@
         </xsl:copy>
     </xsl:template>
     
+    <xsl:template match="tei:fileDesc/tei:titleStmt/tei:respStmt[2]" mode="rebuild.source">
+        <xsl:param name="contributors" as="node()*" tunnel="yes"/>
+        <xsl:copy>
+            <xsl:apply-templates select="node() | @*" mode="#current"/>
+            <xsl:comment select="'The following users are automatically extracted from GitHub'"/>
+            <xsl:sequence select="$contributors"/>    
+        </xsl:copy>
+    </xsl:template>
+    
     <xsl:template match="tei:body" mode="rebuild.source">
         <xsl:param name="chapters" as="node()*" tunnel="yes"/>
         <xsl:param name="path" as="xs:string" tunnel="yes"/>
+        <xsl:param name="contributors" as="node()*" tunnel="yes"/>
         <xsl:copy>
             <xsl:variable name="first.level.chapters" select="$chapters/descendant-or-self::node()[@type= 'div1']" as="node()*"/>
             <xsl:for-each select="$first.level.chapters">
@@ -87,6 +97,7 @@
                                     <respStmt>
                                         <resp>With contributions by</resp>
                                         <xsl:comment>TODO: To be filled automatically via GitHub API</xsl:comment>
+                                        <xsl:sequence select="$contributors"/>
                                     </respStmt>
                                 </titleStmt>
                                 <publicationStmt>
@@ -171,6 +182,40 @@
         <xsl:copy>
             <xsl:apply-templates select="@ref | @xml:id | node()" mode="#current"/>
         </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="tei:graphic/@url" mode="clean.source">
+        <xsl:choose>
+            <xsl:when test="starts-with(.,'../images')">
+                <xsl:attribute name="url" select="."/>
+            </xsl:when>
+            <xsl:when test="starts-with(.,'https://edirom.de/smufl-browser') and not(ends-with(., '.png'))">
+                <xsl:attribute name="url" select=". || '.png'"/>
+            </xsl:when>
+            <xsl:when test="starts-with(.,'https://') or starts-with(.,'http://')">
+                <xsl:attribute name="url" select="."/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:attribute name="url" select="'../images/' || ."/>
+            </xsl:otherwise>
+        </xsl:choose>        
+    </xsl:template>
+    
+    <xsl:template match="tei:graphic/@url" mode="clean.modules">
+        <xsl:choose>
+            <xsl:when test="starts-with(.,'../images')">
+                <xsl:attribute name="url" select="."/>
+            </xsl:when>
+            <xsl:when test="starts-with(.,'https://edirom.de/smufl-browser') and not(ends-with(., '.png'))">
+                <xsl:attribute name="url" select=". || '.png'"/>
+            </xsl:when>
+            <xsl:when test="starts-with(.,'https://') or starts-with(.,'http://')">
+                <xsl:attribute name="url" select="."/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:attribute name="url" select="'../images/' || ."/>
+            </xsl:otherwise>
+        </xsl:choose>        
     </xsl:template>
     
     <xsl:template match="temp:include" mode="clean.source">
