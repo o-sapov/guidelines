@@ -6,9 +6,10 @@ version: "dev"
 
 In CMN, notes are determined by three basic parameters:
 
-- pitch name (using **@pname**)
-- octave (using **@oct**)
-- duration (using **@dur**)
+- pitch name (using @pname)
+- octave (using @oct)
+- duration (using @dur)
+
 A typical note, in this case a quarter note C4, is therefore encoded like so:
 {% include mei example="cmn/cmn-sample098.txt" valid="" %}
 
