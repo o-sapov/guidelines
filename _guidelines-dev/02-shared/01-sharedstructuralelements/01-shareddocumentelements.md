@@ -18,7 +18,7 @@ The other potential root elements serve different usecases or purposes.
 
 {% include desc elem="music" %}
 
-A document with {% include link elem="music" %} as root element provides music notation markup without metadata, and could serve embedding MEI within other kinds of markup, e.g. TEI (see {% include link id ="tei" %}).
+A document with {% include link elem="music" %} as root element provides music notation markup without metadata, and could serve embedding MEI within other kinds of markup, e.g. TEI (see {% include link id="tei" %}).
 
 The below example shows the basic structure of an MEI file with {% include link elem="music" %} as root element. Basically this already represents a valid MEI file, although without any contents:
 
